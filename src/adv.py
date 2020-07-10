@@ -1,5 +1,5 @@
-from room import Room
-
+from room import Room     # need to set up a class called room! 
+from player import Player # built out a class called player stored, location & items 
 # Declare all the rooms
 
 room = {
@@ -38,6 +38,7 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
+player = Player('playerone', 'outside')  # class player took self, name, and location. 
 
 # Write a loop that:
 #
