@@ -1,5 +1,13 @@
 from room import Room     # need to set up a class called room! 
-from player import Player # built out a class called player stored, location & items 
+from player import Player # built out a class called new_player stored, current_room & items 
+
+'''
+* Add a REPL parser to `adv.py` that accepts directional commands to move the new_player
+  * After each move, the REPL should print the name and description of the new_player's current room
+  * Valid commands are `n`, `s`, `e` and `w` which move the new_player North, South, East or West
+  * The parser should print an error if the new_player tries to move where there is no room.
+'''
+
 # Declare all the rooms
 
 room = {
@@ -37,9 +45,8 @@ room['treasure'].s_to = room['narrow']
 # Main
 #
 
-# Make a new player object that is currently in the 'outside' room.
-player = Player('playerone', 'outside')  # class player took self, name, and location. 
-
+# Make a new new_player object that is currently in the 'outside' room. 
+player = Player('Laura', room['outside'])
 # Write a loop that:
 #
 # * Prints the current room name
@@ -50,3 +57,40 @@ player = Player('playerone', 'outside')  # class player took self, name, and loc
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+# start prompt
+print(f'\n Hello, {player.name} \n Current Room: {player.current_room.name}\n')
+print(room['outside'].description)
+
+# direction conditions 
+directions = ['n', 'e', 's', 'w']
+
+#while loop
+while True:
+    #player selection to play, inputs 
+    player_input = input("\n Let's go! Onward! \n n for north, s for south, e for east, w for west, q to quit the game: \n")
+    # player selections/input wrong. error handling 
+    if len(player_input) > 2 or len(player_input) < 1:
+        print("Invalid entry. Please try again.")
+    
+    else: 
+    # direction actions
+        if player_input[0] in directions:
+            try: 
+                player.move_room(player_input[0])
+                print(f'\n You are in the {player.current_room.name}: \n {player.current_room.description} \n')
+                # print(player.current_room)
+            except AttributeError:
+                    print("\n There isn't a room in that direction, Keep searching.....")
+
+        # quit the game
+        elif player_input[0] == 'q':
+            print('\n Until next time!')
+            exit()
+        
+        #error handiling for the directions
+        else: 
+            print("\n Can't go that way, try again. ")
+
+
+
