@@ -12,7 +12,7 @@ from player import Player # built out a class called new_player stored, current_
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+                    "North of you, the cave mount beckons"),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
@@ -46,7 +46,25 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new new_player object that is currently in the 'outside' room. 
-player = Player('Laura', room['outside'])
+# player = Player('Laura', room['outside'])
+# user can input their own unqiue name. 
+playerName = input('Please enter a name for your hero: ')
+hero = Player(playerName, room['outside'])
+
+
+from item import Item 
+
+# create an item 
+sword = Item("sword", "Sword made of gold")
+# add item to the room
+room['foyer'].add_item(sword)
+
+map = Item('map', "The secrets to the land")
+room['outside'].add_item(map)
+
+latern = Item('latern', 'Help you see the way')
+room['overlook'].add_item(latern)
+
 # Write a loop that:
 #
 # * Prints the current room name
@@ -59,29 +77,62 @@ player = Player('Laura', room['outside'])
 # If the user enters "q", quit the game.
 
 # start prompt
-print(f'\n Hello, {player.name} \n Current Room: {player.current_room.name}\n')
+print(f'\n Hello, {hero.name} \n Current Room: {hero.current_room.name}\n')
 print(room['outside'].description)
+print('''\n Here's a map to help you find your way to the treasure or live. Type 'get map' or 'take map' to add it to your inventory.\n To remove an item, type 'drop map'. Try it out!\n ''')
 
-# direction conditions 
+# direction & action conditions 
 directions = ['n', 'e', 's', 'w']
+item_actions = ['get', 'take', 'drop']
 
 #while loop
 while True:
     #player selection to play, inputs 
-    player_input = input("\n Let's go! Onward! \n n for north, s for south, e for east, w for west, q to quit the game: \n")
+    player_input = input("\n Let's go! Onward! \n n for north, s for south, e for east, w for west, \nget [ITEM], take [ITEM], drop [ITEM], i for inventory, or q to quit the game: \n").lower().split(' ')
+
     # player selections/input wrong. error handling 
     if len(player_input) > 2 or len(player_input) < 1:
         print("Invalid entry. Please try again.")
-    
+
+    #action of player get take or drop an item.  condiontal for actions
+    elif len(player_input) == 2:
+        if player_input[0] in item_actions:
+            if player_input[0] == 'get' or player_input[0] == 'take':
+                item = hero.current_room.search_items(player_input[1])
+                if item in hero.current_room.items:
+                    hero.current_room.drop_item(item)
+                    hero.add_item(item)
+                    item.on_take(item)
+                else:
+                    print('\n This item does not exist. Try again...')
+
+            elif player_input[0] == 'drop':
+                item = hero.search_items(player_input[1])
+                if item in hero.inventory:
+                    hero.current_room.add_item(item)
+                    hero.drop_item(item)
+                    item.on_drop(item)
+                else:
+                    print('\n There are no items in your inventory.')
     else: 
     # direction actions
         if player_input[0] in directions:
             try: 
-                player.move_room(player_input[0])
-                print(f'\n You are in the {player.current_room.name}: \n {player.current_room.description} \n')
-                # print(player.current_room)
+                hero.move_room(player_input[0])
+                print(f'\n You are in the {hero.current_room.name}: \n {hero.current_room.description} \n')
+                print(hero.current_room)
+                hero.current_room.print_items()
             except AttributeError:
                     print("\n There isn't a room in that direction, Keep searching.....")
+
+            #inventory 
+        elif player_input[0] == 'i' or player_input[0] == 'inventory':
+                if hero.inventory:
+                    print(f'\n{hero.name}, these are the items you have:')
+                    for items in hero.inventory:
+                        print(f'{items}')
+                else:
+                    print('\n It seems to be, there is not a thing in your inventory.')
 
         # quit the game
         elif player_input[0] == 'q':

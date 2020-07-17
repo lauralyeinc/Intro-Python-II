@@ -1,5 +1,6 @@
 # Implement a class to hold room information. This should have name and
 # description attributes.
+from item import Item
 
 """
 * Put the Room class in `room.py` based on what you see in `adv.py`.
@@ -11,13 +12,17 @@
     ?????
 """
 class Room():
-    def __init__(self, name, description):
+    def __init__(self, name, description, items = None):
         self.name = name
         self.description = description
         self.n_to = None
         self.s_to = None
         self.e_to = None
-        self.w_to = None 
+        self.w_to = None  
+        if items is None:
+            self.items = []
+        else:
+            self.items = items
 
     def __str__(self):
         output = ""
@@ -35,3 +40,26 @@ class Room():
 
     def __repr__(self):
         return f"self.name = {self.name} : self.description = {self.description}"
+
+    def print_items(self):
+        if len(self.items) > 0:
+            print('This room as the following items to take: ')
+            for i in self.items:
+                print(f' {i.name} : {i.description}')
+        else:
+            print("There isn't any items in this room.")
+
+
+    def search_items(self, item):
+        for i in self.items:
+            if i.name.lower() == item:
+                return i 
+        else: 
+            print(f'That item is not in this room. Keep looking...')
+            self.print_items()
+
+    def add_item(self, item):
+        self.items.append(item)
+
+    def drop_item(self, item):
+        self.items.remove(item)
