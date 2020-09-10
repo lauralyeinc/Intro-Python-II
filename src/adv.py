@@ -56,7 +56,7 @@ from item import Item
 
 # create an item 
 sword = Item("sword", "Sword made of gold")
-# add item to the room
+# # add item to the room
 room['foyer'].add_item(sword)
 
 map = Item('map', "The secrets to the land")
